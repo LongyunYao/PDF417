@@ -18,8 +18,10 @@ end
 %subplot(211);
 figure;
 imshow(Pic);
+OTSU_2(Pic)
 %[maxgrey, Pic] = otsu(Pic);%大津算法计算二值图像
-[maxgrey, Pic] = thresh_md(Pic);%大津算法计算二值图像
+[maxgrey, Pic] = OTSU_2(Pic);%大津算法计算二值图像
+%[maxgrey, Pic] = thresh_md(Pic);%大津算法计算二值图像
 maxgrey
 figure;
 imshow(Pic);

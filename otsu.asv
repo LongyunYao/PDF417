@@ -38,8 +38,6 @@ function [maxgrey, Pic] = otsu(Pic)
 
 	%t之前的被称为前景像素，t之后的被称为背景像素
 	%这里PPT的matlab有误，因为可能产生越界行为
-    u0 = zeros(end_index-start_index+1, 1);
-    u1 = zeros(end_index-start_index+1, 1);
 	for t = 1 : end_index-start_index+1
 		%w0(i)是前i个像素的累加概率
 		w0(t) = sum(Count(1 : t));
@@ -59,7 +57,7 @@ function [maxgrey, Pic] = otsu(Pic)
 	%g表示每个像素值所对应的的期望阀值
 	%g = (u * w0 - u0) .^ 2 ./ (w0 .* (1 - w0));
     for t = 1 : end_index-start_index+1
-        g = w0(t)*(u0(t)-u)*(u0(t)-u)+(1-w0(t))*(u1(t)-u)*(u1(t)-u);
+        g = (u0(t)-u)*(uo(t)-u)*(u2-u)*(u2-u)
     end
 
 	%找到最佳阀值
@@ -69,7 +67,7 @@ function [maxgrey, Pic] = otsu(Pic)
 	  
 	for i = 1 : Row
 		for j = 1 : Col
-			if Pic(i, j) > maxgrey
+			if Pic(i, j) > 90
 				Pic(i, j) = 255;
 			else
 				Pic(i, j) = 0;

@@ -18,12 +18,14 @@ end
 %subplot(211);
 figure;
 imshow(Pic);
-[maxgrey, Pic] = otsu(Pic);%大津算法计算二值图像
-Pic
+OTSU_2(Pic)
+%[maxgrey, Pic] = otsu(Pic);%大津算法计算二值图像
+[maxgrey, Pic] = _2(Pic);%大津算法计算二值图像
+%[maxgrey, Pic] = thresh_md(Pic);%大津算法计算二值图像
 maxgrey
 figure;
 imshow(Pic);
-%
+%{
 [leftline, k] = LineScan(Pic);
 %描左侧线
 ltl=leftline';
@@ -39,3 +41,4 @@ Pic = interpolation(Pic);
 
 figure;
 imshow(Pic);
+%}
