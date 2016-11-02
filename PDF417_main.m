@@ -4,7 +4,7 @@ string_1 = 'lv1 - easy.jpg';
 string_2 = 'lv2 - normal.jpg';
 string_3 = 'lv3 - hard.jpg';
 string_4 = 'lv4 - crazy.jpg';
-Pic=imread(string_4);
+Pic=imread(string_2);
 [row, col, degree] = size(Pic);
 
 % level = graythresh(Pic);
