@@ -1,0 +1,10 @@
+function Pic_temp = interpolation(Pic)
+    [row, col] = size(Pic);
+    Pic_temp = Pic;
+    for i = 2 : row-1
+        for j = 2 : col-1
+            %检查周围8个元素
+            if (Pic(i, j) ~= Pic(i-1, j) && Pic(i, j) ~= Pic(i+1, j))
+        end
+    end
+end
