@@ -4,7 +4,7 @@ string_1 = 'lv1 - easy.jpg';
 string_2 = 'lv2 - normal.jpg';
 string_3 = 'lv3 - hard.jpg';
 string_4 = 'lv4 - crazy.jpg';
-Pic=imread(string_1);
+Pic=imread(string_4);
 [row, col, degree] = size(Pic);
 
 % level = graythresh(Pic);
@@ -25,7 +25,7 @@ OTSU_2(Pic)
 maxgrey
 figure;
 imshow(Pic);
-%{
+
 [leftline, k] = LineScan(Pic);
 %√Ë◊Û≤‡œﬂ
 ltl=leftline';
@@ -41,4 +41,13 @@ Pic = interpolation(Pic);
 
 figure;
 imshow(Pic);
-%}
+
+%…Ë÷√∏Ø ¥≈Ú’Õµƒ∞Îæ∂Œ™20pixel
+se = strel('disk',20);
+Pic_imopen = imopen(Pic, se);
+title('imopen');
+figure, imshow(Pic_imopen);
+
+bound = find_bound(Pic_imopen);
+figure, imshow(bound);
+

@@ -59,7 +59,7 @@ function [maxgrey, Pic] = otsu(Pic)
 	%g表示每个像素值所对应的的期望阀值
 	%g = (u * w0 - u0) .^ 2 ./ (w0 .* (1 - w0));
     for t = 1 : end_index-start_index+1
-        g = w0(t)*(u0(t)-u)*(u0(t)-u)+(1-w0(t))*(u1(t)-u)*(u1(t)-u);
+        g = (u0(t)-u)*(u0(t)-u)*(u1(t)-u)*(u1(t)-u);
     end
 
 	%找到最佳阀值
