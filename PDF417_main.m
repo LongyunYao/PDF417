@@ -46,8 +46,10 @@ imshow(Pic);
 se = strel('disk',20);
 Pic_imopen = imopen(Pic, se);
 title('imopen');
-figure, imshow(Pic_imopen);
+% figure, imshow(Pic_imopen);
 
 bound = find_bound(Pic_imopen);
-figure, imshow(bound);
+% figure, imshow(bound);
 
+accum = Hough(bound);
+surf(accum),brighten(1);
