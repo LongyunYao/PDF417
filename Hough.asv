@@ -15,7 +15,7 @@
 % lines：输出lines结果 
 % linesMax：lines的最大个数
 %}
-function [H, theta, rho, peak] = Hough(bound)
+function [H, theta, rho, peak, pointx, pointy] = Hough(bound)
     threshold = 20;
     total = 0;
     linesMax = 6;
@@ -26,7 +26,7 @@ function [H, theta, rho, peak] = Hough(bound)
     %pho  = x*cos(theta) + y*sin(theta);
     %rhomax=(sqrt(row^2+col^2));
     numangle = 180;    % 霍夫空间，角度方向的大小
-    maxrho = round(sqrt(row^2+col^2))
+    maxrho = round(sqrt(row^2+col^2));
     numrho = round(maxrho * 2 + 1);  % r的空间范围
     %H[rhomax][180];
     H = zeros(numrho, numangle);%累加器
@@ -113,22 +113,64 @@ function [H, theta, rho, peak] = Hough(bound)
         if abs(begin_y) > 10^10
             x1y1(i, 1) = abs(end_x); x1y1(i, 2) = abs(begin_y);
             x2y2(i, 1) = abs(end_x); x2y2(i, 2) = abs(begin_y)*2;
-            line([abs(end_x), abs(end_x)], [0, row]);
+            plot([abs(end_x), abs(end_x)], [0, row]);
             grid on;
         elseif abs(end_x) > 10^10
             x1y1(i, 1) = abs(end_x); x1y1(i, 2) = abs(begin_y);
             x2y2(i, 1) = abs(end_x)*2; x2y2(i, 2) = abs(begin_y);
-            line([0, col], [abs(begin_y), abs(begin_y)]);
+            plot([0, col], [abs(begin_y), abs(begin_y)]);
             grid on;
         elseif end_x >= 0
-            line([0, end_x*2], [begin_y, 0-begin_y]);
+            x1y1(i, 1) = abs(0); x1y1(i, 2) = abs(begin_y);
+            x2y2(i, 1) = abs(end_x); x2y2(i, 2) = abs(0);
+            plot([0, end_x*2], [begin_y, 0-begin_y]);
             grid on;
         else
-            line([end_x, 0-end_x], [0, begin_y*2]);
+            x1y1(i, 1) = -abs(end_x); x1y1(i, 2) = 0;
+            x2y2(i, 1) = 0; x2y2(i, 2) = abs(begin_y);
+            plot([end_x, 0-end_x], [0, begin_y*2]);
             grid on;
         end
     end
     
     %% 求解四个顶点
-    a=polyfit([x1,x2],[y1,y2],1)
+    % y=kb(i,1)x+kb(i,2)
+    kb = zeros(4, 2);
+    for i = 1:4
+        x1 = x1y1(i, 1);x2 = x2y2(i, 1); y1 = x1y1(i, 2); y2 = x2y2(i, 2);
+        if(abs(x1) > 10^10 || abs(x2) > 10^10 || abs(y1) > 10^10 || abs(y2) > 10^10) continue; end
+        temp = polyfit([x1,x2],[y1,y2],1);
+        kb(i, 1) = temp(1); kb(i, 2) = temp(2);
+    end
+    syms k1 k2 c1 c2 x y
+    count = 1;
+    pointx = zeros(1,4);
+    pointy = zeros(1,4);
+    for i = 1 : 4
+        if(abs(x1y1(i,1)) > 10^10)
+            func1 = sprintf('%s%f', 'y=', x1y1(i,2));
+        elseif(abs(x1y1(i,2)) > 10^10)
+            func1 = sprintf('%s%f', 'x=', x1y1(i,1));
+        else
+            func1 = sprintf('%s%f%s%f%s','y=(',kb(i, 1),')*x+(', kb(i, 2), ')');
+        end
+        for j = 1 : 4
+            if (i == j) continue; end
+            if(abs(x2y2(j,1)) > 10^10)
+                func2 = sprintf('%s%f', 'y=', x2y2(j,2));
+            elseif(abs(x2y2(j,2)) > 10^10)
+                func2 = sprintf('%s%f', 'x=', x2y2(j,1));
+            else
+                func2 = sprintf('%s%f%s%f%s','y=(',kb(j, 1),')*x+(', kb(j, 2), ')');
+            end
+            ezplot(func1);hold on;
+            ezplot(func)
+            [x_temp,y_temp] = solve(func1,func2,'x','y');
+            if abs(round(x_temp)) <= col & abs(round(y_temp)) <= row
+                pointx(count) = round(x_temp); pointy(count) = round(y_temp);
+                count = count+1;
+            end
+        end
+    end
+    plot(pointx,pointy,'o')
 end

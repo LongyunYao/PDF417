@@ -13,7 +13,7 @@ string_10 = '3.bmp';
 string_11 = '4.bmp';
 string_12 = '5.bmp';
 string_13 = '6.bmp';
-Pic=imread(string_13);
+Pic=imread(string_1);
 [row, col, degree] = size(Pic);
 
 % level = graythresh(Pic);
@@ -50,6 +50,7 @@ end
 figure;
 imshow(Pic);
 
+%% 二维码的四个角的选择
 %设置腐蚀膨胀的半径为20pixel
 se = strel('disk',20);
 Pic_imopen = imopen(Pic, se);
@@ -58,16 +59,5 @@ title('imopen');
 
 bound = find_bound(Pic_imopen);
 % figure, imshow(bound);
-[H, theta, rho, peak]= Hough(bound);
-% figure, surf(H),brighten(1);
-% peak=houghpeaks(H,8);
-% 
-% lines=houghlines(bound,theta,rho,peak);      
-% figure,imshow(bound,[]),title('Hough Transform Detect Result'),hold on      
-% 
-% for k=1:length(lines)
-%     xy=[lines(k).point1;lines(k).point2];
-%     lines(k).point1
-%     lines(k).point2
-%     plot(xy(:,1),xy(:,2),'LineWidth',4,'Color',[.6 .6 .6]);      
-% end
+%conrer_x, corner_y就是四个点的坐标，有重复未去除
+[H, theta, rho, peak, conrer_x, corner_y]= Hough(bound);
