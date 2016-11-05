@@ -35,9 +35,8 @@ Pic = revolve(Pic, leftline, k);
 
 figure;
 imshow(Pic);
-for i = 1 : 4
-    Pic = interpolation(Pic);
-end
+Pic = interpolation(Pic);
+
 figure;
 imshow(Pic);
 
@@ -49,16 +48,31 @@ title('imopen');
 
 bound = find_bound(Pic_imopen);
 % figure, imshow(bound);
-[H, theta, rho]= Hough(bound);
+[H, theta, rho]= hough(bound);
 figure, surf(H),brighten(1);
-% peak=houghpeaks(H,8);
-% 
-% lines=houghlines(bound,theta,rho,peak);      
-% figure,imshow(bound,[]),title('Hough Transform Detect Result'),hold on      
-% 
-% for k=1:length(lines)
-%     xy=[lines(k).point1;lines(k).point2];
-%     lines(k).point1
-%     lines(k).point2
-%     plot(xy(:,1),xy(:,2),'LineWidth',4,'Color',[.6 .6 .6]);      
-% end
+peak=houghpeaks(H,8);
+
+lines=houghlines(bound,theta,rho,peak);      
+figure,imshow(bound,[]),title('Hough Transform Detect Result'),hold on      
+
+for k=1:length(lines)
+    xy=[lines(k).point1;lines(k).point2];      
+    plot(xy(:,1),xy(:,2),'LineWidth',4,'Color',[.6 .6 .6]);      
+end   
+%[H, theta, rho]= hough(bound,'RhoResolution', 0.5);
+%{
+[H, theta, rho]= hough(bound,'RhoResolution', 0.5);
+figure, surf(accum),brighten(1),
+xlabel('\rho'),ylabel('\theta'); 
+peak=houghpeaks(H,8);
+peak
+hold on        
+lines=houghlines(bound,theta,rho,peak);      
+figure,imshow(bound,[]),title('Hough Transform Detect Result'),hold on      
+for k=1:length(lines)      
+    xy=[lines(k).point1;lines(k).point2];      
+    plot(xy(:,1),xy(:,2),'LineWidth',4,'Color',[.6 .6 .6]);      
+end   
+% accum = Hough(bound);
+% surf(accum),brighten(1);
+%}
