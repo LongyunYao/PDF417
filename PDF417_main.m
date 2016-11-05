@@ -4,7 +4,16 @@ string_1 = 'lv1 - easy.jpg';
 string_2 = 'lv2 - normal.jpg';
 string_3 = 'lv3 - hard.jpg';
 string_4 = 'lv4 - crazy.jpg';
-Pic=imread(string_2);
+string_5 = 'lv5 - insane.jpg';
+string_6 = 'lv6 - lunatic.jpg';
+string_7 = '1.bmp';
+string_8 = '2.bmp';
+string_9 = '2.jpg';
+string_10 = '3.bmp';
+string_11 = '4.bmp';
+string_12 = '5.bmp';
+string_13 = '6.bmp';
+Pic=imread(string_13);
 [row, col, degree] = size(Pic);
 
 % level = graythresh(Pic);
@@ -49,8 +58,8 @@ title('imopen');
 
 bound = find_bound(Pic_imopen);
 % figure, imshow(bound);
-[H, theta, rho]= Hough(bound);
-figure, surf(H),brighten(1);
+[H, theta, rho, peak]= Hough(bound);
+% figure, surf(H),brighten(1);
 % peak=houghpeaks(H,8);
 % 
 % lines=houghlines(bound,theta,rho,peak);      
