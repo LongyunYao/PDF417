@@ -81,6 +81,5 @@ function [thresholdValue, Pic] = OTSU_2(Pic)
 				Pic(i, j) = 0;
 			end
 		end
-	end
-	%subplot(212);
+    end
 end

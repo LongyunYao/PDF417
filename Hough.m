@@ -64,6 +64,7 @@ function [H, theta, rho, peak, XY] = Hough(bound)
     windows_range = 8;
     peak_num = 4;
     figure, surf(H), brighten(1);
+    title('H');
     i_index = zeros(numrho);
     j_index = zeros(numangle);
     peak = zeros(peak_num, 2);
@@ -102,36 +103,17 @@ function [H, theta, rho, peak, XY] = Hough(bound)
             end
         end
     end
-    peak
     x1y1 = zeros(4, 2);
     x2y2 = zeros(4, 2);
     %% 将rho和theta变换到直角坐标系中
-    imshow(bound);
+    figure, imshow(bound);
+    title('图形边界');
     hold on;
     for i = 1 : peak_num
-        end_x = peak(i,2)/CosTheta(peak(i, 1));
-        begin_y = peak(i, 2)/SinTheta(peak(i, 1));
-        if abs(begin_y) > 10^10
-            x1y1(i, 1) = abs(end_x); x1y1(i, 2) = abs(begin_y);
-            x2y2(i, 1) = abs(end_x); x2y2(i, 2) = abs(begin_y)*2;
-            plot([abs(end_x), abs(end_x)], [0, row]);
-            grid on;
-        elseif abs(end_x) > 10^10
-            x1y1(i, 1) = abs(end_x); x1y1(i, 2) = abs(begin_y);
-            x2y2(i, 1) = abs(end_x)*2; x2y2(i, 2) = abs(begin_y);
-            plot([0, col], [abs(begin_y), abs(begin_y)]);
-            grid on;
-        elseif end_x >= 0
-            x1y1(i, 1) = abs(0); x1y1(i, 2) = abs(begin_y);
-            x2y2(i, 1) = abs(end_x); x2y2(i, 2) = abs(0);
-            plot([0, end_x*2], [begin_y, 0-begin_y]);
-            grid on;
-        else
-            x1y1(i, 1) = -abs(end_x); x1y1(i, 2) = 0;
-            x2y2(i, 1) = 0; x2y2(i, 2) = abs(begin_y);
-            plot([end_x, 0-end_x], [0, begin_y*2]);
-            grid on;
-        end
+        begin_x = 1; begin_y = peak(i, 2)/SinTheta(peak(i, 1));
+        end_x = col; end_y = begin_y-col/tan(peak(i, 1)/180*pi);
+        line([begin_x, end_x], [begin_y, end_y], 'Color', 'b');
+        grid on;
     end
     %% 求解四个顶点
     %整理一下4条边
@@ -144,7 +126,6 @@ function [H, theta, rho, peak, XY] = Hough(bound)
     if abs(peak(3, 2)) > abs(peak(4, 2))
         temp = peak(3, :); peak(3, :) = peak(4, :); peak(4, :) = temp;
     end
-    peak
     % y=kb(i,1)x+kb(i,2)
     % Y=k*X+b
     % k=-cot(theta)  b=rho/sin(theta)
@@ -156,51 +137,12 @@ function [H, theta, rho, peak, XY] = Hough(bound)
         if(peak(i, 1) == 90 || (peak(i, 1) == 180))
             continue;
         end
-        k(i) = -cot(peak(i, 1)/180*pi)
-        b(i) = peak(i, 2)/SinTheta(peak(i, 1))
+        k(i) = -cot(peak(i, 1)/180*pi);
+        b(i) = peak(i, 2)/SinTheta(peak(i, 1));
     end
     %求解P1 = L1∩L3
     [XY(1, 1), XY(1, 2)] = findpoint(peak(1, 1), peak(1, 2), peak(3, 1), peak(3, 2));
     [XY(2, 1), XY(2, 2)] = findpoint(peak(1, 1), peak(1, 2), peak(4, 1), peak(4, 2));
     [XY(3, 1), XY(3, 2)] = findpoint(peak(2, 1), peak(2, 2), peak(4, 1), peak(4, 2));
     [XY(4, 1), XY(4, 2)] = findpoint(peak(2, 1), peak(2, 2), peak(3, 1), peak(3, 2));
-    plot(XY(:, 1), XY(:, 2),'o')
-    %{
-    kb = zeros(4, 2);
-    for i = 1:4
-        x1 = x1y1(i, 1);x2 = x2y2(i, 1); y1 = x1y1(i, 2); y2 = x2y2(i, 2);
-        if(abs(x1) > 10^10 || abs(x2) > 10^10 || abs(y1) > 10^10 || abs(y2) > 10^10) continue; end
-        temp = polyfit([x1,x2],[y1,y2],1);
-        kb(i, 1) = temp(1); kb(i, 2) = temp(2);
-    end
-    syms k1 k2 c1 c2 x y
-    count = 1;
-    pointx = zeros(1,4);
-    pointy = zeros(1,4);
-    for i = 1 : 4
-        if(abs(x1y1(i,1)) > 10^10)
-            func1 = sprintf('%s%f', 'y=', x1y1(i,2));
-        elseif(abs(x1y1(i,2)) > 10^10)
-            func1 = sprintf('%s%f', 'x=', x1y1(i,1));
-        else
-            func1 = sprintf('%s%f%s%f%s','y=(',kb(i, 1),')*x+(', kb(i, 2), ')');
-        end
-        for j = 1 : 4
-            if (i == j) continue; end
-            if(abs(x2y2(j,1)) > 10^10)
-                func2 = sprintf('%s%f', 'y=', x2y2(j,2));
-            elseif(abs(x2y2(j,2)) > 10^10)
-                func2 = sprintf('%s%f', 'x=', x2y2(j,1));
-            else
-                func2 = sprintf('%s%f%s%f%s','y=(',kb(j, 1),')*x+(', kb(j, 2), ')');
-            end
-            [x_temp,y_temp] = solve(func1,func2,'x','y');
-            if abs(round(x_temp)) <= col & abs(round(y_temp)) <= row
-                pointx(count) = round(x_temp); pointy(count) = round(y_temp);
-                count = count+1;
-            end
-        end
-    end
-    %}
-    % plot(pointx,pointy,'o')
 end

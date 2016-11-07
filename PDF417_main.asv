@@ -13,52 +13,59 @@ string_10 = '3.bmp';
 string_11 = '4.bmp';
 string_12 = '5.bmp';
 string_13 = '6.bmp';
-Pic=imread(string_2);
+Pic=imread(string_5);
 [row, col, degree] = size(Pic);
-
-% level = graythresh(Pic);
-% BW = im2bw(Pic,level);
-% figure;
-% imshow(BW)
 
 if degree > 2
     Pic=rgb2gray(Pic);
 end
 %subplot(211);
-figure;
-imshow(Pic);
-%[maxgrey, Pic] = otsu(Pic);%大津算法计算二值图像
+figure,imshow(Pic);
+title('原始图片');
 [maxgrey, Pic] = OTSU_2(Pic);%大津算法计算二值图像
-%[maxgrey, Pic] = thresh_md(Pic);%大津算法计算二值图像
-figure;
-imshow(Pic);
+figure, imshow(Pic);
+title('大津算法二值化以后');
+imwrite(Pic,'OTSUbw.bmp');
 
+Pic = imread('OTSUbw.bmp');
 [leftline, k] = LineScan(Pic);
 %描左侧线
 ltl=leftline';
-figure;
-plot(ltl(2,1:k));
+figure,plot(ltl(2,1:k));
+title('左边线');
 %plot(leftline(1:k, 2));
 
 Pic = revolve(Pic, leftline, k);
+figure, imshow(Pic);
+title('旋转之后');
+saveas(gcf,'leftrevolve.bmp')
 
-figure;
-imshow(Pic);
-saveas(gcf,'bw.bmp')
 for i = 1 : 4
     Pic = interpolation(Pic);
 end
-figure;
-imshow(Pic);
+
+figure, imshow(Pic);
+title('滤波完毕');
+
+Pic = step2(Pic);
+figure, imshow(Pic);
+imwrite(Pic, 'step2.bmp');
 
 %% 二维码的四个角的选择
 %设置腐蚀膨胀的半径为20pixel
+Pic = imread('step2.bmp');
 se = strel('disk',20);
 Pic_imopen = imopen(Pic, se);
-title('imopen');
-% figure, imshow(Pic_imopen);
 
 bound = find_bound(Pic_imopen);
-% figure, imshow(bound);
-%conrer_x, corner_y就是四个点的坐标，有重复未去除
 [H, theta, rho, peak, XY]= Hough(bound);
+figure,imshow(Pic);
+title('图像以及四个顶点');
+hold on;
+plot(XY(:, 1), XY(:, 2),'o');
+imwrite(Pic, 'step3.bmp');
+xlswrite(XY, M)；
+%% 二维码的二次矫正
+Pic = roll2((peak(1, 1)-90)/180*pi, Pic);
+figure,imshow(Pic);
+title('旋转之后');
