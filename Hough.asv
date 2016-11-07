@@ -15,7 +15,7 @@
 % lines：输出lines结果 
 % linesMax：lines的最大个数
 %}
-function [H, theta, rho, peak, pointx, pointy] = Hough(bound)
+function [H, theta, rho, peak, XY] = Hough(bound)
     threshold = 20;
     total = 0;
     linesMax = 6;
@@ -102,6 +102,7 @@ function [H, theta, rho, peak, pointx, pointy] = Hough(bound)
             end
         end
     end
+    peak
     x1y1 = zeros(4, 2);
     x2y2 = zeros(4, 2);
     %% 将rho和theta变换到直角坐标系中
@@ -132,9 +133,39 @@ function [H, theta, rho, peak, pointx, pointy] = Hough(bound)
             grid on;
         end
     end
-    
     %% 求解四个顶点
+    %整理一下4条边
+    % B=A(1,:)
+    % A(1,:)=A(2,:)
+    % A(2,:)=B
+    if abs(peak(1, 2)) > abs(peak(2, 2))
+        temp = peak(1, :); peak(1, :) = peak(2, :); peak(2, :) = temp;
+    end
+    if abs(peak(3, 2)) > abs(peak(4, 2))
+        temp = peak(3, :); peak(3, :) = peak(4, :); peak(4, :) = temp;
+    end
+    peak
     % y=kb(i,1)x+kb(i,2)
+    % Y=k*X+b
+    % k=-cot(theta)  b=rho/sin(theta)
+    % x=(b2-b1)/(k1-k2)   y=K1*x+b1;
+    k = zeros(1, 4);
+    b = zeros(1, 4);
+    XY = zeros(4, 2);
+    for i = 1 : 4
+        if(peak(i, 1) == 90 || (peak(i, 1) == 180))
+            continue;
+        end
+        k(i) = -cot(peak(i, 1)/180*pi)
+        b(i) = peak(i, 2)/SinTheta(peak(i, 1))
+    end
+    %求解P1 = L1∩L3
+    XY(1, :) = findpoint(peak(1, 1), peak(1, 2), peak(3, 1), peak(3, 2));
+    XY(2, :) = findpoint(peak(, 1), peak(1, 2), peak(3, 1), peak(3, 2));
+    XY(3, :) = findpoint(peak(1, 1), peak(1, 2), peak(3, 1), peak(3, 2));
+    XY(4, :) = findpoint(peak(1, 1), peak(1, 2), peak(3, 1), peak(3, 2));
+    plot(651, 269,'o')
+    %{
     kb = zeros(4, 2);
     for i = 1:4
         x1 = x1y1(i, 1);x2 = x2y2(i, 1); y1 = x1y1(i, 2); y2 = x2y2(i, 2);
@@ -163,8 +194,6 @@ function [H, theta, rho, peak, pointx, pointy] = Hough(bound)
             else
                 func2 = sprintf('%s%f%s%f%s','y=(',kb(j, 1),')*x+(', kb(j, 2), ')');
             end
-            ezplot(func1);hold on;
-            ezplot(func)
             [x_temp,y_temp] = solve(func1,func2,'x','y');
             if abs(round(x_temp)) <= col & abs(round(y_temp)) <= row
                 pointx(count) = round(x_temp); pointy(count) = round(y_temp);
@@ -172,5 +201,6 @@ function [H, theta, rho, peak, pointx, pointy] = Hough(bound)
             end
         end
     end
-    plot(pointx,pointy,'o')
+    %}
+    % plot(pointx,pointy,'o')
 end
