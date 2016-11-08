@@ -12,9 +12,9 @@ function Pic_new = averMovingSegmentation(Pic)
     Pic_new = zeros(Row, Col);
     z = zeros(1, total+2);
     m = zeros(1, total+2);
-    n = 120;
+    n = 69;
+    b = 0.78;
     k = 1;
-    b = 0.6;
 
     z(1) = Pic(1, 1);
     m(1) = z(1)/n;

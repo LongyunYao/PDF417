@@ -64,5 +64,5 @@ newimg=forp(newimg,B,Bx,By,-1); %¸¯Ê´
 newimg=1-newimg;
 
 figure,imshow(newimg);
-
+imwrite(newimg,'step6.bmp');
         

@@ -20,8 +20,11 @@ if degree > 2
 end
 figure,imshow(Pic);
 title('原始图片');
+%% 注意：前3步使用OTSU
+%其他的使用移动平均的局部阀值
+%推荐n=69，b=0.78 备用120 0.6
 Pic = averMovingSegmentation(Pic);%大津算法计算二值图像
 % Pic = OTSU_2(Pic);%大津算法计算二值图像
 figure, imshow(Pic);
-title('大津算法二值化以后');
+title('二值化以后');
 imwrite(Pic,'step1.bmp');
