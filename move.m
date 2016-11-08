@@ -7,8 +7,9 @@ img=oldimg;
 %img=im2bw(img,0.6);
 %------------------------------------
 img=im2bw(img,0.6);
-subplot(121);imshow(img);
-[height,width]=size(img)
+% figure,subplot(121), imshow(img);
+% title('去除连通块之前');
+[height,width]=size(img);
 newimg=1-img;
 %B=[0,1,0;1,1,1;0,1,0];
 B=ones(19);                  %设置矩阵
@@ -65,6 +66,6 @@ for m=1:height
     end
 end
 img=1-img;
-subplot(122);
-imshow(img);
+% subplot(122),imshow(img);
+% title('去除连通块之后');
 end

@@ -13,13 +13,11 @@ string_10 = '3.bmp';
 string_11 = '4.bmp';
 string_12 = '5.bmp';
 string_13 = '6.bmp';
-Pic=imread(string_0);
+Pic=imread(string_6);
 [row, col, degree] = size(Pic);
-
 if degree > 2
     Pic=rgb2gray(Pic);
 end
-%subplot(211);
 figure,imshow(Pic);
 title('原始图片');
 [maxgrey, Pic] = OTSU_2(Pic);%大津算法计算二值图像

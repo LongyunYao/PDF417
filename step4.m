@@ -1,3 +1,4 @@
+close all;
 %% 二维码的二次矫正
 Pic = imread('step3.bmp');
 XY = xlsread('corner.xlsx');

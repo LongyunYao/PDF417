@@ -1,3 +1,4 @@
+close all;
 %% 去除连通块
 Pic = imread('step1.bmp');
 % [leftline, k] = LineScan(Pic);
@@ -21,4 +22,5 @@ title('滤波完毕');
 
 Pic = move(Pic);
 figure, imshow(Pic);
+title('去除连通域');
 imwrite(Pic, 'step2.bmp');

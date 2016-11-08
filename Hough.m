@@ -15,7 +15,7 @@
 % lines：输出lines结果 
 % linesMax：lines的最大个数
 %}
-function [H, theta, rho, peak, XY] = Hough(bound)
+function [H, theta, rho, peak, XY] = Hough(Pic, bound)
     %% rough函数的实现
     %   hough函数的作用就在于在一个离散的“RT空间”上完成累积
     [row, col] = size(bound);
@@ -104,7 +104,7 @@ function [H, theta, rho, peak, XY] = Hough(bound)
     x1y1 = zeros(4, 2);
     x2y2 = zeros(4, 2);
     %% 将rho和theta变换到直角坐标系中
-    figure, imshow(bound);
+    figure, imshow(Pic);
     title('图形边界');
     hold on;
     for i = 1 : peak_num
@@ -124,24 +124,24 @@ function [H, theta, rho, peak, XY] = Hough(bound)
     if abs(peak(3, 2)) > abs(peak(4, 2))
         temp = peak(3, :); peak(3, :) = peak(4, :); peak(4, :) = temp;
     end
-    adddis = 10;
-    if sign(peak(1, 2))*sign(peak(2, 2)) == -1
-        peak(1, 2) = sign(peak(1, 2))*(abs(peak(1,2))+adddis);
-        peak(2, 2) = sign(peak(2, 2))*(abs(peak(2,2))+adddis);
-        peak(3, 2) = sign(peak(3, 2))*(abs(peak(3,2))-adddis);
-        peak(4, 2) = sign(peak(4, 2))*(abs(peak(4,2))+adddis);
-    elseif sign(peak(3, 2))*sign(peak(4, 2)) == -1
-        peak(1, 2) = sign(peak(1, 2))*(abs(peak(1,2))-adddis);
-        peak(2, 2) = sign(peak(2, 2))*(abs(peak(2,2))+adddis);
-        peak(3, 2) = sign(peak(3, 2))*(abs(peak(3,2))+adddis);
-        peak(4, 2) = sign(peak(4, 2))*(abs(peak(4,2))+adddis);
-    else
-        peak(1, 2) = sign(peak(1, 2))*(abs(peak(1,2))-adddis);
-        peak(2, 2) = sign(peak(2, 2))*(abs(peak(2,2))+adddis);
-        peak(3, 2) = sign(peak(3, 2))*(abs(peak(3,2))-adddis);
-        peak(4, 2) = sign(peak(4, 2))*(abs(peak(4,2))+adddis);
-    end
-    %求解P1 = L1∩L3
+%     adddis = 10;
+%     if sign(peak(1, 2))*sign(peak(2, 2)) == -1
+%         peak(1, 2) = sign(peak(1, 2))*(abs(peak(1,2))+adddis);
+%         peak(2, 2) = sign(peak(2, 2))*(abs(peak(2,2))+adddis);
+%         peak(3, 2) = sign(peak(3, 2))*(abs(peak(3,2))-adddis);
+%         peak(4, 2) = sign(peak(4, 2))*(abs(peak(4,2))+adddis);
+%     elseif sign(peak(3, 2))*sign(peak(4, 2)) == -1
+%         peak(1, 2) = sign(peak(1, 2))*(abs(peak(1,2))-adddis);
+%         peak(2, 2) = sign(peak(2, 2))*(abs(peak(2,2))+adddis);
+%         peak(3, 2) = sign(peak(3, 2))*(abs(peak(3,2))+adddis);
+%         peak(4, 2) = sign(peak(4, 2))*(abs(peak(4,2))+adddis);
+%     else
+%         peak(1, 2) = sign(peak(1, 2))*(abs(peak(1,2))-adddis);
+%         peak(2, 2) = sign(peak(2, 2))*(abs(peak(2,2))+adddis);
+%         peak(3, 2) = sign(peak(3, 2))*(abs(peak(3,2))-adddis);
+%         peak(4, 2) = sign(peak(4, 2))*(abs(peak(4,2))+adddis);
+%     end
+    %求解P1 = L1∩L3. P2 = L1∩L4. P3 = L2∩L4. P4 = L2∩L3.
     [XY(1, 1), XY(1, 2)] = findpoint(peak(1, 1), peak(1, 2), peak(3, 1), peak(3, 2));
     [XY(2, 1), XY(2, 2)] = findpoint(peak(1, 1), peak(1, 2), peak(4, 1), peak(4, 2));
     [XY(3, 1), XY(3, 2)] = findpoint(peak(2, 1), peak(2, 2), peak(4, 1), peak(4, 2));

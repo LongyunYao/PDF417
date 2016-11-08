@@ -34,7 +34,7 @@ function h = roll2(Angle, Image)
         end  
     end 
 
-    h=(ImageNew); 
+    h=(ImageNew);
     h=medfilt2(h); 
 %     for i = 1 : 1
 %         h = interpolation(h);
