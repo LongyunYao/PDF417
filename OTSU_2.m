@@ -1,4 +1,4 @@
-function [thresholdValue, Pic] = OTSU_2(Pic)
+function [Pic, thresholdValue] = OTSU_2(Pic)
     % 设t为设定的阈值。
     % wo： 分开后 前景像素点数占图像的比例
     % uo： 分开后 前景像素点的平均灰度

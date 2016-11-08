@@ -13,14 +13,15 @@ string_10 = '3.bmp';
 string_11 = '4.bmp';
 string_12 = '5.bmp';
 string_13 = '6.bmp';
-Pic=imread(string_6);
+Pic=imread(string_5);
 [row, col, degree] = size(Pic);
 if degree > 2
     Pic=rgb2gray(Pic);
 end
 figure,imshow(Pic);
 title('原始图片');
-[maxgrey, Pic] = OTSU_2(Pic);%大津算法计算二值图像
+Pic = averMovingSegmentation(Pic);%大津算法计算二值图像
+% Pic = OTSU_2(Pic);%大津算法计算二值图像
 figure, imshow(Pic);
 title('大津算法二值化以后');
 imwrite(Pic,'step1.bmp');
