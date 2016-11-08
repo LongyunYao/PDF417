@@ -1,9 +1,11 @@
 function bound = find_bound(Pic)
     [row, col] = size(Pic);
+    bound = zeros(row, col);
     se = getnhood(strel('disk',3));
     % Pic_imopen = imopen(Pic, se);
     Pic_imopen=forp(Pic,se,3,3,-1);  %¸¯Ê´
+    Pic_imopen2=forp(Pic,se,3,3,-1);  %¸¯Ê´
     figure, imshow(Pic_imopen);
-    bound = Pic - Pic_imopen;
+    bound = Pic_imopen - Pic_imopen;
     figure, imshow(bound);
 end

@@ -5,7 +5,9 @@ function [leftline, k] = LineScan(Pic)
     %寻找左侧边线
     leftline=zeros(Row,2);
     k=1;
-    for i=int16(Row/3):Row %不能从1开始扫描，否则在运行例如test.jpg的时候会描边错误
+    % 不能从1开始扫描，否则在运行例如test.jpg的时候会描边错误
+    % 从1/3行开始扫描是一个经验值
+    for i=int16(Row/3):Row
         for j=1:Col
             if Pic(i,j) == 0
                 if k == 1

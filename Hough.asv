@@ -38,16 +38,17 @@ function [H, theta, rho, peak, XY] = Hough(bound)
         CosTheta(i) = cos(theta(i)/180*pi);
     end
     
-    % stage 1. fill Hulator  
+    % 遍历整个图片，找出所有的白点
     for i = 1 : row
         for j = 1 : col
             %将每个非零点，转换为霍夫空间的离散正弦曲线，并统计。  
             if( bound(i, j) ~= 0 )
-                for n = 1 : numangle
+                % 对于找到的每一白点，扫描180度，存下所有经过它的 
+                for theta = 1 : numangle
                     %ρ=x*cosθ+y*sinθ
-                    r = round( j * CosTheta(n) + i * SinTheta(n));  
-                    r = round(r + (numrho - 1) / 2);%将负数ρ变成正数
-                    H(r, theta(n)) = H(r, theta(n))+1;%每条线统计一次
+                    rho = round( j * CosTheta(n) + i * SinTheta(theta));  
+                    rho = round(rho + (numrho - 1) / 2);%将负数ρ变成正数
+                    H(rho, theta(n)) = H(rho, theta(n))+1;%每条线统计一次
                 end
             end
         end

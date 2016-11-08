@@ -11,8 +11,8 @@ subplot(121);imshow(img);
 [height,width]=size(img)
 newimg=1-img;
 %B=[0,1,0;1,1,1;0,1,0];
-B=ones(17);                  %设置矩阵
-Bx=9;By=9;                   %选取原点
+B=ones(19);                  %设置矩阵
+Bx=10;By=10;                   %选取原点
 newimg=forp(newimg,B,Bx,By,1);  %膨胀
 newimg=forp(newimg,B,Bx,By,-1); %腐蚀
 B=ones(3);         

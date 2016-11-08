@@ -28,21 +28,6 @@ function [thresholdValue, Pic] = OTSU_2(Pic)
 
 	Count = Count / (Row*Col);	%每一个灰度值的频率
 
-
-	for i = 1 : L
-		if Count(i) ~= 0		%第一个不为0的灰度值的下标
-			start_index = i;	%该灰度值，注意【下标-1】表示对应的灰度值
-			break;
-		end
-	end
-
-	for i = L : -1 : 1
-		if Count(i) ~= 0		%倒数第一个不为0的灰度值的下标
-			end_index = i;		%该灰度值
-			break;
-		end
-	end
-
 	%Count是每个灰度出现的【概率】
 	%去掉0值是为了方便之后的方差计算
 	%Count = Count(start_index: end_index);
@@ -68,7 +53,8 @@ function [thresholdValue, Pic] = OTSU_2(Pic)
 		m2 = (sum - csum) / n2;%后景像素期望
 		sb = (n1 * (n2) *(m1 - m2) * (m1 - m2));
 		% bbg: note: can be optimized. */
-		if (sb > fmax) 
+        
+		if sb > fmax
 			fmax = sb;
 			thresholdValue = k;
         end
