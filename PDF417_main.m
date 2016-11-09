@@ -13,7 +13,8 @@ string_10 = '3.bmp';
 string_11 = '4.bmp';
 string_12 = '5.bmp';
 string_13 = '6.bmp';
-Pic=imread(string_5);
+str = string_1;
+Pic=imread(str);
 [row, col, degree] = size(Pic);
 if degree > 2
     Pic=rgb2gray(Pic);
@@ -23,7 +24,13 @@ title('原始图片');
 %% 注意：前3步使用OTSU
 %其他的使用移动平均的局部阀值
 %推荐n=69，b=0.78 备用120 0.6
-Pic = averMovingSegmentation(Pic);%大津算法计算二值图像
+if strcmp(str,string_5) || strcmp(str,string_4)
+    Pic = averMovingSegmentation2(Pic);%大津算法计算二值图像
+elseif strcmp(str,string_6)
+    Pic = averMovingSegmentation(Pic);%大津算法计算二值图像
+else
+    Pic = OTSU_2(Pic);
+end
 % Pic = OTSU_2(Pic);%大津算法计算二值图像
 figure, imshow(Pic);
 title('二值化以后');

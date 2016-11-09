@@ -21,6 +21,12 @@ function [Pic, thresholdValue] = OTSU_2(Pic)
     %        适合图像直方图有明显波谷
 	[Row, Col] = size(Pic);
 	L = 256; %256个灰度级
+    Pic = 255.-Pic;
+    se=strel('disk',60);%产生结构元素
+    %顶帽变换
+    Pic=imtophat(Pic,se);%使用顶帽变换
+    Pic = 255.-Pic;
+    imshow(Pic);
 
 	%Count是一个数组，存放了每一个灰度值的数量，【下标-1】表示对应的灰度值
 	%x是一个数组，用来存放【灰度值】

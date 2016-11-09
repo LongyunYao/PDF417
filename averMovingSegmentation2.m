@@ -1,7 +1,13 @@
 function Pic_new = averMovingSegmentation2(Pic)
 	[Row, Col] = size(Pic);
 	L = 256; %256个灰度级
-
+    Pic = 255.-Pic;
+    se=strel('disk',40);%产生结构元素
+    %顶帽变换
+    Pic=imtophat(Pic,se);%使用顶帽变换
+    Pic = 255.-Pic;
+    Pic = imadjust(Pic);
+    imshow(Pic);
 	%Count是一个数组，存放了每一个灰度值的数量，【下标-1】表示对应的灰度值
 	%x是一个数组，用来存放【灰度值】
 	[Count, x] = imhist(Pic);
@@ -9,24 +15,22 @@ function Pic_new = averMovingSegmentation2(Pic)
     total = Row*Col;
 	Count = Count / total;	%每一个灰度值的频率
 
-    n = 65;
     Pic_new = zeros(Row, Col);
-    Pic_temp = zeros(Row+n*2+2, Col+n*2+2);
-    Pic_temp([n+1,n+Row], [n+1, n+Col]) = Pic([1, Row], [1, Col]);
+    z = zeros(1, total+2);
     m = zeros(1, total+2);
-    z = zeros(n+2, n+2);
-    pixel_count = 0;
-    b = 0.80;
+    n = 400;
+    b = 0.9;
     k = 1;
-    half_n = round(n/2);
-
+    
+    %首次运行时m1初始化为z1/n
     z(1) = Pic(1, 1);
     m(1) = z(1)/n;
-	for i = n+1 : n+Row
-        for j = n+1 : n+Col
-            pixel_count = 0;
+	for i = 1 : Row
+        for j = 1 : Col
             k = k+1;
-%             z([1,n], [1,n]) = Pic_temp([i-half_n,i+n-half_n+1], [j-half_n,j+n-half_n+1]);
+            z(k) = Pic(i, j);
+            %当累计像素点没有达到n时，则求取前k个平均值
+            %否则求取n个像素点的平均值
             if(k<=n)
                 m(k) = sum(z([1:k]))/k;
             else

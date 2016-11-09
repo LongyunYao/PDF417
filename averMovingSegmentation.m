@@ -12,16 +12,19 @@ function Pic_new = averMovingSegmentation(Pic)
     Pic_new = zeros(Row, Col);
     z = zeros(1, total+2);
     m = zeros(1, total+2);
-    n = 69;
-    b = 0.78;
+    n = 120;
+    b = 0.6;
     k = 1;
-
+    
+    %首次运行时m1初始化为z1/n
     z(1) = Pic(1, 1);
     m(1) = z(1)/n;
 	for i = 1 : Row
         for j = 1 : Col
             k = k+1;
             z(k) = Pic(i, j);
+            %当累计像素点没有达到n时，则求取前k个平均值
+            %否则求取n个像素点的平均值
             if(k<=n)
                 m(k) = sum(z([1:k]))/k;
             else
