@@ -13,7 +13,7 @@ string_10 = '3.bmp';
 string_11 = '4.bmp';
 string_12 = '5.bmp';
 string_13 = '6.bmp';
-str = string_1;
+str = string_0;
 Pic=imread(str);
 [row, col, degree] = size(Pic);
 if degree > 2
